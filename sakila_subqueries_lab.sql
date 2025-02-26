@@ -81,6 +81,18 @@ WHERE film_actor.actor_id = (
     LIMIT 1
 );
 
+-- 6.2. Alternative solution using JOIN:
+SELECT title
+FROM film
+JOIN film_actor ON film.film_id = film_actor.film_id
+JOIN (
+    SELECT actor_id
+    FROM film_actor
+    GROUP BY actor_id
+    ORDER BY COUNT(film_id) DESC
+    LIMIT 1
+) AS most_prolific_actor ON film_actor.actor_id = most_prolific_actor.actor_id;
+
 -- 7. Find the films rented by the most profitable customer in the Sakila database.
 SELECT film.title
 FROM rental
