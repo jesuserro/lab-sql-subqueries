@@ -19,6 +19,13 @@ WHERE actor_id IN (
     WHERE film.title = 'Alone Trip'
 );
 
+-- Alternative solution using JOIN:
+SELECT actor.first_name, actor.last_name
+FROM actor
+JOIN film_actor ON actor.actor_id = film_actor.actor_id
+JOIN film ON film_actor.film_id = film.film_id
+WHERE film.title = 'Alone Trip';
+
 -- Bonus:
 
 -- 4. Identify all movies categorized as family films.
