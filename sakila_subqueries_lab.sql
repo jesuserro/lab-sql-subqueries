@@ -9,6 +9,15 @@ SELECT title, length
 FROM film
 WHERE length > (SELECT AVG(length) FROM film);
 
+-- 2.1. Do the same with no subquery:
+SELECT film.title, film.length
+FROM film
+JOIN (
+    SELECT AVG(length) AS avg_length
+    FROM film
+) AS avg_length_table
+WHERE film.length > avg_length_table.avg_length;
+
 -- 3. Use a subquery to display all actors who appear in the film "Alone Trip".
 SELECT actor.first_name, actor.last_name
 FROM actor
@@ -19,7 +28,7 @@ WHERE actor_id IN (
     WHERE film.title = 'Alone Trip'
 );
 
--- Alternative solution using JOIN:
+-- 3.1. Alternative solution using JOIN:
 SELECT actor.first_name, actor.last_name
 FROM actor
 JOIN film_actor ON actor.actor_id = film_actor.actor_id
