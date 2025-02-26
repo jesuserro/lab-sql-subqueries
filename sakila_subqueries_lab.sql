@@ -9,7 +9,7 @@ SELECT title, length
 FROM film
 WHERE length > (SELECT AVG(length) FROM film);
 
--- 2.1. Do the same with no subquery:
+-- 2.2. Do the same with no subquery:
 SELECT film.title, film.length
 FROM film
 JOIN (
@@ -28,7 +28,7 @@ WHERE actor_id IN (
     WHERE film.title = 'Alone Trip'
 );
 
--- 3.1. Alternative solution using JOIN:
+-- 3.2. Alternative solution using JOIN:
 SELECT actor.first_name, actor.last_name
 FROM actor
 JOIN film_actor ON actor.actor_id = film_actor.actor_id
@@ -44,7 +44,24 @@ JOIN film_category ON film.film_id = film_category.film_id
 JOIN category ON film_category.category_id = category.category_id
 WHERE category.name = 'Family';
 
--- 5. Retrieve the name and email of customers from Canada using both subqueries and joins.
+-- 5. Retrieve the name and email of customers from Canada, using both subqueries and joins:
+SELECT first_name, last_name, email
+FROM customer
+WHERE address_id IN (
+    SELECT address_id
+    FROM address
+    WHERE city_id IN (
+        SELECT city_id
+        FROM city
+        WHERE country_id = (
+            SELECT country_id
+            FROM country
+            WHERE country = 'Canada'
+        )
+    )
+);
+
+-- 5.2. Alternative solution using JOIN:
 SELECT customer.first_name, customer.last_name, customer.email
 FROM customer
 JOIN address ON customer.address_id = address.address_id
