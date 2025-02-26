@@ -106,6 +106,19 @@ WHERE rental.customer_id = (
     LIMIT 1
 );
 
+-- 7.2. Alternative solution using JOIN:
+SELECT film.title
+FROM rental
+JOIN inventory ON rental.inventory_id = inventory.inventory_id
+JOIN film ON inventory.film_id = film.film_id
+JOIN (
+    SELECT customer_id
+    FROM payment
+    GROUP BY customer_id
+    ORDER BY SUM(amount) DESC
+    LIMIT 1
+) AS most_profitable_customer ON rental.customer_id = most_profitable_customer.customer_id;
+
 -- 8. Retrieve the client_id and the total_amount_spent of those clients who spent more than the average of the total_amount spent by each client.
 SELECT customer_id, total_amount_spent
 FROM (
