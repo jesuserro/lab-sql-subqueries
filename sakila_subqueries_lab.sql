@@ -134,3 +134,20 @@ WHERE total_amount_spent > (
         GROUP BY customer_id
     ) AS avg_totals
 );
+
+-- 8.2. Alternative solution using JOIN:
+SELECT customer_totals.customer_id, customer_totals.total_amount_spent
+FROM (
+    SELECT customer_id, SUM(amount) AS total_amount_spent
+    FROM payment
+    GROUP BY customer_id
+) AS customer_totals
+JOIN (
+    SELECT AVG(total_amount_spent) AS avg_total_amount_spent
+    FROM (
+        SELECT SUM(amount) AS total_amount_spent
+        FROM payment
+        GROUP BY customer_id
+    ) AS avg_totals
+) AS avg_totals_table
+WHERE customer_totals.total_amount_spent > avg_totals_table.avg_total_amount_spent;
